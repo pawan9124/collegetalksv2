@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html ng-app="CollegeTalks">
+
+<head>
+<meta charset="UTF-8">
+<meta name="X-UA-Compatible" content="IE-edge">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>CollegeTalks</title>
+
+<!--BOOTSTRAP CDN-->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><!--Bootstrap 3.3.1-->
+
+
+ <!--CSS Local Storage-->
+ <link rel="stylesheet" href="public/assets/css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+ <script>
+    var socket=io();
+    
+ </script>
+</head>
+
+<body  ng-class="login.class" ng-controller="loginController as login" >
+
+
+<!--Start of the navigation bar-->
+<nav class="navbar  navbar-inverse navbar-fixed-top"><!--Begin of the navigation login box-->
+<!--The section of the content box is handled by the loginController-->
+<div class="container"  >
+
+<div class="row" id="nav-content">
+
+<!--FOR THE LOGO SECTION-->
+<div class="col-sm-2  logo">
+  <a ng-show="!login.isLoggedIn" ui-sref="/">
+    <img class="logo" src="public/assets/images/logo.png">
+  </a>
+  <a ng-show="login.isLoggedIn" class="ng-cloak" ui-sref="main">
+    <img src="public/assets/images/logo.png">
+   </a>
+</div>
+
+<!--FOR THE TEXT BOX INPUT SECTION-->
+
+<form ng-submit="login.loginUser($event)">
+
+<!--Email input box-->
+  <div class="col-sm-3  input-align">
+    <input type="text" class="form-control ng-cloak login-input"  ng-show="!login.isLoggedIn" ng-model="login.email" placeholder="Enter your email">
+  </div>
+
+  <!--Password section-->
+  <div class="col-sm-3  input-align">
+    <input type="password" class="form-control ng-cloak login-input"  ng-show="!login.isLoggedIn" ng-model="login.password" placeholder="Enter your password">
+  </div>
+
+  <!--Button section-->
+  <div class="col-sm-4  login-button-align">
+     <button ng-click="login.loginUser($event)" ng-show="!login.isLoggedIn" class="btn ng-cloak btn-danger">Login</button>
+
+    <!--Error from the backend-->
+    <span class="alert alert-danger ng-cloak" ng-show="!login.isLoggedIn" ng-if="login.noLoginErrorMessage">{{login.error}}</span>
+ </div>
+</form>
+
+<!--FOR THE NAVIGATION BAR AFTER THE USER LOGGED IN-->
+
+<!--FOR THE HOME-->
+    <div class="col-sm-2 ng-cloak home-nav-text">
+         <a ng-show="login.isLoggedIn" ui-sref="main">
+            <span class="glyphicon glyphicon-home nav-home" aria-hidden="true"></span>
+               Home
+         </a>
+    </div>
+
+<!--FOR THE PROFILE-->
+    <div class="col-sm-2 ng-cloak home-nav-text">
+         <a ng-show="login.isLoggedIn" ui-sref="editProfile">
+            <span class="glyphicon glyphicon-eye-open nav-profile" aria-hidden="true"></span>
+               Profile
+         </a>
+    </div>
+
+
+<!--FOR THE LIST OF THE USER TO FOLLOW-->
+    <div class="col-sm-2 ng-cloak home-nav-text">
+      <div class="dropdown">
+              <span ng-controller="FollowController as follow" data-ng-init="follow.getFollowNotification()" >
+                  <a ng-show="login.isLoggedIn" ui-sref="follow" ng-click="follow.unsetFollowNoti()">
+                    <label ng-if="follow.initFollower > 0" class="message-noti">{{follow.initFollower}}</label> 
+                        <span class="glyphicon glyphicon-user nav-follow" aria-hidden="true"></span>
+                       Follow
+                  </a>
+              <a href="#" id="flabel" data-target="#" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle" data-toggle="dropdown">
+                    <span ng-show="login.isLoggedIn" class="caret"></span>
+              </a>
+               <ul  ng-show="follow.showFollowNoti" class="dropdown-menu" aria-labelledby="flabel">
+                  <li ng-repeat="followers in follow.followDetail">
+                       <div ng-if="followers.counter==1">
+                           <a ui-sref="userInformation" ng-click="follow.addTheUser(followers.userId)">
+                               <img class="followers-image" ng-src="{{followers.followersImage}}">
+                                       <span class="followers-username">{{followers.username}}</span>
+                                       <span class="follows-message"> follows you</span>
+                           </a>
+                       </div>
+                   </li>
+              </ul>
+             </span><!--End of the follow controller-->
+           </div><!--This is the end of the dropdown div-->
+    </div><!--This is the end of the follow-->
+
+<!--FOR THE MESSAGE-->
+
+<div class="col-sm-2 ng-cloak home-nav-text">
+  <div class="dropdown" >
+                     <span ng-controller="MessageController as message" data-ng-init="message.getMessagesForNotification()" >
+                        <a ng-show="login.isLoggedIn" ui-sref="message" ng-click="message.unsetMessageNotification()">
+                         <label   ng-if="message.initMessage > 0" class="message-noti"  >{{message.initMessage}}</label>
+                               <span class="glyphicon glyphicon-envelope nav-message" aria-hidden="true"></span>
+                            Message
+                          </a>
+
+                          <a href="#" id="dLabel" data-target="#" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle" data-toggle="dropdown">
+                              <span ng-show="login.isLoggedIn"  class="caret"></span>
+                          </a>
+                           <ul ng-show="message.showMessageNoti" class="dropdown-menu" arai-labelledby="dLabel">
+                               <li ng-repeat="goog in message.forData1">
+                                      <a ui-sref="messages" >
+                                             <span ng-show="message.isMessageStatus1">
+                                                  <img class="index-noti-image" ng-src="{{goog.hold.senderImage}}">
+                                                      <span class="index-noti-username">{{goog.hold.senderUsername}}</span><span> Send you message
+                                              </span><!--THis is for the message notification-->
+                                      </a>
+                                </li>
+                                <li ng-repeat="goog2 in message.forData2">
+                                     <a ui-sref="messages" >
+                                         <span ng-show="message.isMessageStatus2">
+                                             <img class="index-noti-image" ng-src="{{goog2.hold.replyerImage}}">
+                                                   <span class="index-noti-username">{{goog2.hold.replyerUsername}}</span><span>Replied to received message
+                                          </span><!--This is for the received message reply notification-->
+                                      </a>
+                               </li>
+                               <li ng-repeat="goog3 in message.forData3">
+                                  <a ui-sref="messages" >
+                                       <span ng-show="message.isMessageStatus3">
+                                           <img class="index-noti-image" ng-src="{{goog3.hold.replyerImage}}">
+                                                <span class="index-noti-username">{{goog3.hold.replyerUsername}}</span><span>Replied to send message
+                                       </span><!--This is for the send message reply notification-->
+                                   </a>
+                               </li>
+                          </ul>
+                      </span><!--ENd of the span-->
+                  </div><!--End of the dropdown--> 
+</div><!--End fo message-->
+
+ <div class="col-sm-1  ng-cloak home-nav-text">
+                <a ng-show="login.isLoggedIn" ng-click="login.logout()" href="/">
+                         <span class="glyphicon glyphicon-off nav-logout" aria-hidden="true"></span>  Logout
+                </a>
+      </div><!--END OF THE LOGOUT-->
+
+</div>
+</div>
+</nav>
+
+<!--For the index body section-->
+<div class="container ng-cloak" ng-show="!login.isLoggedIn"  >
+  <div class="row">
+     <div ng-show="!login.isLoggedIn" class="col-sm-12  website-heading "><h1 ng-show="!login.isLoggedIn" class="index_heading" >Know Your College Mates</h1></div>
+     <div clearfix></div>
+     <div class="col-sm-12   account-btn"><button type="button" class="btn btn-success" ng-show="!login.isLoggedIn" ui-sref="signup">Create an Account</button></div>
+  </div>
+</div>
+
+
+<div  ng-show="login.isLoggedIn" class="sidenav_left ng-cloak">
+   
+</div>
+<!--NG-VIEW SECTON-->
+
+<div ui-view>
+  
+</div><!--End of ui-view-->
+
+<!-- CHAT USER-->
+<div  ng-show="login.isLoggedIn" class="chat-sidebar ng-cloak" >
+   <a href="#" ng-click="login.getChatUser()" style="color:red;">Online User</a>
+       <div ng-repeat="chatUser in login.allUser">
+       <div class="sidebar-name">
+       <span ng-if="chatUser.isActive=='on' && chatUser.userId!=login.currentUser._id">
+       <!--Pass username and display name to the register popup-->
+       <a ng-click="login.register_popup(chatUser.userId,chatUser.username);">
+         <img width="30" height="30" ng-src={{this.chatUser.userImage}}>
+         <span >{{chatUser.username}}</span>
+       </a> 
+
+       </span><!--ENd of the condition-->      
+   </div>
+   </div>
+</div>
+<!--End of the chat user-->
+
+</body>
+<footer class="ng-cloak" ng-show="!login.isLoggedIn">
+    <center>&#169 Copyright 2016</center>
+
+ </footer>
+
+
+
+<!--JS ANGULAR, BOOTSTRAP AND JQUERY LIBRARY-->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.js"></script>
+
+   
+<!-- JS LIBRARY FOR THE ENTIRE PAGE-->
+
+<!--CONTROLLERS-->
+  <script src="public/controllers/signUpController.js"></script>
+  <script src="public/controllers/loginController.js"></script>
+  <script src="public/controllers/mainController.js"></script>
+  <script src="public/controllers/chatController.js"></script>
+  <script src="public/controllers/profileController.js"></script>
+  <script src="public/controllers/messageController.js"></script>
+  <script src="public/controllers/followController.js"></script>
+  <script src="public/controllers/userInformationController.js"></script>
+
+<!--SERVICES-->
+  <script src="public/services/loginService.js"></script>
+  <script src="public/services/signUpService.js"></script>
+  <script src="public/services/mainService.js"></script>
+  <script src="public/services/chatService.js"></script>
+  <script src="public/services/profileService.js"></script>
+  <script src="public/services/messageService.js"></script>
+  <script src="public/services/followService.js"></script>
+  <script src="public/services/userInformationService.js"></script>
+
+  <!--JS LIBRARY-->
+  <script src="public/app.js"></script>
+  <script src="public/app.routes.js"></script>
+  <script src="public/assets/js/main.js"></script>
+
+  <!-- Libraries for uploading the image-->
+  <script src="node_modules/ng-file-upload/dist/ng-file-upload.js"></script>
+ <script src="node_modules/ng-file-upload/dist/ng-file-upload-all.js"></script>
+  <script src="node_modules/ng-file-upload/dist/ng-file-upload-shim.js"></script>
+
+</html>

@@ -1,0 +1,69 @@
+<!--This is the html page for the message html-->
+<!--Margin to make it more elaborate-->
+<div class="margin" ng-controller="MessageController as message" data-ng-init="message.getMessages()">
+<div class="other-background">
+<!--Container-->
+<div class="container">
+<!--BUTTON FOR SENT OR RECEIVED-->
+
+  <div class="row ">
+    <div class="col-sm-4 ">
+       <p  ng-show="message.ifSentMessageNotClicked" class="messages-status">Received Messages </p>
+       <p ng-show="!message.ifSentMessageNotClicked" class="messages-status">Sent Messages</p>
+   </div><!--ENd of col-sm-4-->
+    <div class="col-sm-8  message-sent-button">
+       <button type="button" ng-show="message.ifSentMessageNotClicked" ng-click="message.getSentMessages()" class="btn btn-primary">See Sent Messages</button>
+       <button type="button" ng-show="!message.ifSentMessageNotClicked" ng-click="message.getMessages1()" class="btn btn-primary"> See Received Messages</button>
+    </div><!--ENd of col-sm-8-->
+    </div><!--End of the row-->
+
+
+    <!--DISPLAY THE USERNAME AND PIC-->
+
+    <div class="row " ng-repeat="mes in message.getMessages">
+       
+        <div class="col-sm-2   message-pics">
+           <p ng-show="message.ifSentMessageNotClicked" class="message-username ">{{mes.senderUsername}}</p>
+           <p ng-show="!message.ifSentMessageNotClicked" class="message-username ">{{mes.receiverUsername}}</p>
+           <p  class=" message-image-align"> <a  ng-show="message.ifSentMessageNotClicked" ui-sref="userInformation" ng-click="addTheUser(mes.senderId)"><img class="message-image" ng-src="{{mes.senderImage}}"></a></p>
+           <p class="message-image-align"><a ng-show="!message.ifSentMessageNotClicked" ui-sref="userInformation" ng-click="addTheUser(mes.receiverId)"><img class="message-image" ng-src="{{mes.receiverImage}}">
+           </a></p>
+        </div><!--ENd of the col-sm-2-->
+
+        <!--DISPLAY THE MESSAGE AND DATE AND STATUS-->
+
+        <div class="col-sm-5  message-date">
+              <p ng-click="unsetMessageNoti(mes.message)" class="message-content">{{mes.message}}  &nbsp;&nbsp;&nbsp;
+                  <span>{{mes.date | date:'dd/MM/yyyy HH:mm'}}</span>
+              </p>
+              <span ng-if="mes.counter==1 && mes.senderId!=message.user._id" class="messageUnread">Unread message</span>
+         <div  ng-repeat="rep in mes.reply">
+            <span  ng-if="rep.receiverCounter==1 && rep.replyerId!=message.user._id" class="replyMessageUnread">Unread Reply</span>
+    <span ng-show="flag">
+             <a ui-sref="userInformation" ng-click="addTheUser(rep.replyerId)">
+             <p class="reply-username">{{rep.replyerUsername}}</p>
+              <img class="reply-image" ng-src="{{rep.replyerImage}}"></a>
+            {{rep.contents}}&nbsp;&nbsp;{{rep.date | date:'dd/MM/yyyy HH:mm'}}
+        </div>
+            <input type="text" class="form-control" ng-show="flag" ng-model="reply"  ng-keypress="sendReply($event,mes._id)" placeholder="reply this message..">
+    </span>
+            
+        </div><!--End of the col-sm-5-->
+
+        <!--DISPLAY THE BUTTON TO SEE -->
+
+        <div class="col-sm-4 " >
+            <button type="button" ng-click="toggle(mes.message)" class="btn btn-warning">See reply</button>
+            <button type="button" ng-show="message.ifSentMessageNotClicked" ng-if="mes.counter==1" class="btn btn-danger" ng-click="unsetMessageNoti(mes.message)">Mark as read</button>
+            <button type="button" ng-show="message.ifSentMessageNotClicked" ng-if="mes.counter==0" class="btn btn-success disabled-viewed">Viewed</button>
+         
+         </div><!--End of the col-sm-3-->
+    </div><!--ENd of the row-->
+
+<span class="alert alert-success" ng-show="message.replySent">Reply sent successfully</span>
+ </div><!--End of the container-->
+
+
+</div>
+
+</div><!--End of the margin-->

@@ -1,0 +1,63 @@
+<!-- SINGUP PAGE-->
+
+<!-- START OF THE CONTAINER-->
+<div class="container" >
+
+<form >
+<!--FOR THE EMAIL LABEL-->
+<div class="row">
+    <div class="col-sm-3"></div>
+       <div class="col-sm-6">
+       <div class="form-group">
+            <label for="email" class="Email-title">Email</label>
+            <input type="text"  class="form-control " ng-model="signup.UserEmail" placeholder="Enter the email">
+            <div class="userExists" ng-if="signup.checkEmailBox"><span class="alert alert-danger">Please enter a valid Email</span></div>
+            <div class="userExists"> <span class="alert alert-danger  " ng-if="signup.userExists">!User Email already exists</span></div>
+       </div>
+    </div><!--End of the column-->
+  <div class="col-sm-3"></div>
+</div><!--ENd of the row-->
+
+
+<!--FOR THE USERNAME-->
+<div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-6">
+    <div class="form-group">
+       <label for="username" class="Email-title">Username</label>
+       <input type="text"  class="form-control " ng-model="signup.Username" placeholder="Enter the username">
+       <div class="userExists" ng-if="signup.checkUsernameBox"><span class="alert alert-danger">Please Enter your Username</span></div>
+  </div>
+ </div><!--End of the column-->
+ <div class="col-sm-3"></div>
+</div><!--ENd of the row-->
+
+
+<!--FOR THE PASSWORD-->
+<div class="row">
+ <div class="col-sm-3"></div>
+   <div class="col-sm-6">
+      <div class="form-group">
+            <label for="password" class="Password-title">Password</label>
+            <input type="password" class="form-control "  ng-model="signup.UserPassword" placeholder="Enter the password">
+            <div class="userExists" ng-if="signup.checkPasswordBox"><span class="alert alert-danger">Please Enter your Password</span></div>
+
+      </div>
+    </div><!--ENd of the col-->
+  <div class="col-sm-3"></div>
+</div><!--End of the row-->
+
+<!--FOR THE SIGNUP BUTTON-->
+  <div class="row">
+  <div class="col-sm-3"></div>
+     <div class="col-sm-6 signup-button">
+        <button ng-click="signup.signup()"  class="btn btn-default">Create</button>
+  </div><!--End of the col-->
+  
+  <div class="col-sm-3"></div>
+    </div><!--ENd of the row-->
+  </form>
+
+ <div class="userCreatedAlign" ng-if="signup.userCreated"> <span class="userCreated">!User Created</span></div>
+
+</div><!--End of the container-->

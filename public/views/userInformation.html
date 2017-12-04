@@ -1,0 +1,123 @@
+
+<!-- THIS IS THE USER INFORMATION PAGE-->
+<div class="margin ng-cloak" ng-controller="UserInformationController as info" data-ng-init="info.getAllUserInformation(userId)" >
+
+<!--Start of the container-->
+<div class="container">
+ 
+  <div class="row">
+    <div class="col-sm-6">
+    <!--Start of the left-section-->
+    <!-- THE USERNAME-->
+    <div class="row">
+      <div class="col-sm-10 userInfo-title">
+           {{info.allInformation.username}}
+      </div>
+    </div><!--End of the row-->
+<!-- USER IMAGE-->
+    <div class="row">
+        <div class="col-sm-10 ">
+            <img class="userInfo-image" ng-src="{{info.allInformation.image}}">
+        </div>
+    </div><!--End of the row-->
+
+<!--USER BIO-->
+    <div class="row">
+        <div class="col-sm-10 userInfo-bio-background">
+           <p class="userInfo-bio">{{info.allInformation.bio}}</p>
+        </div>
+    </div><!--End of the row-->
+
+<!-- MESSAGE TEXT BOX-->
+    <div class="row">
+      <div class="col-sm-10">
+         <textarea class="form-control userInfo-message-box" ng-show="info.universalId!=info.currentUserId" ng-model="info.userInfo.message"  placeholder="Enter the message..."></textarea>
+      </div>
+    </div><!--End of the row-->
+
+    <!--MESSAGE SENT BUTTON AND INFORMATION-->
+      <div class="row">
+       <div class="col-sm-10 userInfo-send-button">
+          <button type="button"  ng-show="info.universalId!=info.currentUserId"  ng-click="info.postMessage()"class="btn btn-info">Send Message</button>
+          <div class="sentMessage" ng-if="info.MessageSent"><span class="alert alert-success">Message Sent</span></div>
+       </div><!--End of the col-->
+    </div><!--End of the row-->
+
+  </div><!--End of the col-sm-6-->
+
+<!--START OF THE USER INFO SECTION -->
+  <div class="col-sm-6">
+
+  <!-- TITLE USERINFORMATION-->
+    <div class="row">
+       <div class="col-sm-6">
+          <p class="userInfo-heading">User Information</p>
+       </div><!--End of the col-sm-6 of the userInfo-->
+    </div><!--End of the row of the user info-->
+
+<!-- DISPLAY THE USERNAME-->
+   <div class="row">
+     <div class="col-sm-4 userInfo-text-align"><span class="userInfo-title">Username:</span></div>
+     <div class="col-sm-6 "><span class="user-load-data">{{info.allInformation.username}}</span></div>     
+</div><!--End of row-->
+
+<!--DISPLAY THE BIRTHDAY-->
+<div class="row"> 
+    <div class="col-sm-4 userInfo-text-align"><span class="userInfo-title">Birthday:</span></div>
+   <div class="col-sm-6 "><span  class="user-load-data">{{info.allInformation.birthday}}</span></div>
+</div><!--End row-->
+
+<!--DISPLAY THE SEX-->
+<div class="row">       
+   <div class="col-sm-4 userInfo-text-align"><span class="userInfo-title">Sex:</span></div>
+   <div class="col-sm-6 "><span class="user-load-data">{{info.allInformation.sex}}</span></div>
+   
+</div><!--End row-->
+
+<!--DISPLAY THE COURSE-->
+<div class="row">    
+    <div class="col-sm-4 userInfo-text-align"><span class="userInfo-title">Course:</span></div>
+    <div class="col-sm-6 "><span  class="user-load-data">{{info.allInformation.course}}</span></div>
+    </div><!--End of row-->
+
+<!--DISPLAY THE PRESENT YEAR-->
+<div class="row">     
+          <div class="col-sm-4 userInfo-text-align"><span class="userInfo-title">Present Year:</span></div>
+          <div class="col-sm-6 "><span  class="user-load-data">{{info.allInformation.year}}</span></div>
+ </div><!--End row-->
+
+<!--COLLEGE NAME-->
+ <div class="row">      
+      <div class="col-sm-4 userInfo-text-align"><span class="userInfo-title">College:</span></div>
+      <div class="col-sm-6 "><span  class="user-load-data">{{info.allInformation.college}}</span></div>
+ </div><!--End row-->
+
+<!--DISPLAY THE BIOGRAPHY-->
+  <div class="row">      
+      <div class="col-sm-4 userInfo-text-align"><span class="userInfo-title">Biography:</span></div>
+      <div class="col-sm-6 "><span  class="user-load-data">{{info.allInformation.bio}}</span></div>
+  </div><!--End row-->
+
+<!--DIPSLAY THE USER FOLLOWING WITH COUNTER--> 
+     <div class="row">
+         <div class="col-sm-6">
+           <p class="userInfo-following">Following ({{info.followingCounter}})</p>
+         </div>
+     </div><!--end of the row-->
+<!--DISPLAY THE USER FOLLOWING INFORMATION-->
+     <div class="row" ng-repeat="information in info.allInformation.following">
+          <div class="col-sm-8 userInfo-following-image">
+          <a ui-sref="userInformation">
+           <img ng-click="info.getDetail(information.userId)" ng-src="{{information.followingImage}}">
+             <span class="userInfo-following-username">{{information.username}}</span>
+           </a>
+          </div>
+     </div><!--end of the row-->
+
+  </div><!--ENd of the col-sm-6-->
+
+
+  </div><!--End of the row-->
+</div><!--End of the container-->
+
+</div><!--End of the margin-->

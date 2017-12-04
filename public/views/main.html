@@ -1,0 +1,129 @@
+<!--For the margin to be below the body-->
+<!--********************************************************************************************************-->
+<div class="margin ng-cloak">
+
+<!--Sart of the post box for upload the post-->
+<!--***************************************************************************************-->
+<div class="container">
+<div class="row">
+  <div class="col-sm-6 ng-cloak " id="postbox">
+          <textarea ng-model="main.newPosts"  class="form-control" placeholder="Enter your posts..."></textarea>
+          <button class="btn btn-success" ng-click="main.sendWastes()">Post</button>
+    </div>
+    <div class="col-sm-3 "></div>
+    <div class="col-sm-3 ">
+     <!-- Single button -->
+<div class="btn-group ng-cloak">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span ng-show="main.isChoosed">Only Following</span><span ng-show="!main.isChoosed">All</span> <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a  ng-click="main.displayOnlyFollowing()">Only Following</a></li>
+    <li><a ng-click="main.displayAll()">All</a></li>
+  </ul>
+</div>
+    </div><!--End of class=col-sm-3-->
+</div>
+</div>
+
+<!--For the body section-->
+<!--Information about the incoming posts by the others-->
+<!--*********************************************************************************************-->
+<a ng-if="main.incomingWastes.length >0" ng-click="main.setNewWastes()">There are {{main.difference}}  new wastes</a>
+
+<!--For the user body section-->
+<!--Initialization of the new comment-->
+<!--***********************************************************************************************-->
+
+<div ng-init="main.goComment=[{newComment: 'lola ka jhola'}]">
+</div>
+
+<div ng-if="!main.mainLoaded" ><span class="glyphicon glyphicon-repeat spinner ng-cloak"></span></div>
+<!--Start of the user profile-->
+<!--All the contents post by the diffrent and same users are displayed on the dashboard-->
+<!--**********************************************************************************************-->
+<div  ng-if="main.mainLoaded" class="container" ng-repeat="waste in main.wastes">
+<div class="row">
+    <div class="col-sm-2   homepage-username"><label>{{waste.user}}</label></div>
+</div>
+<!--End of row for username-->
+<div class="row">
+    <div class="col-sm-2  homepage-userImage" id="userimage">
+         <a ng-click="main.addTheUser(waste.userId)" ui-sref="userInformation"><img  ng-src="{{waste.userImage}}" /></a>
+    </div>
+    <div   class="col-sm-8  homepage-userText section-text" >
+          <textarea ng-show="waste.isEditPost" ng-model="waste.content"></textarea>
+          <span ng-show="!waste.isEditPost" >{{waste.content}}</span>
+          <button ng-show="waste.isEditPost" ng-click="main.EditPostSubmit(waste.content,waste)"  class="btn btn-info" >Ok</button>&nbsp;&nbsp;&nbsp;&nbsp;
+          <strong>{{waste.date | date:'dd/MM/yyyy hh:mm '}}</strong>
+    </div>
+    
+     <div  ng-if="waste.userId==main.user._id" class="btn-group edit_paragraph">
+        <span class="glyphicon glyphicon-cog dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        </span> 
+        <ul class="dropdown-menu">
+            <li><a  ng-click="main.EditPost(this.waste)">Edit</a></li>
+            <li><a ng-click="main.deletePost(waste.content,waste)">Delete</a></li>
+        </ul>
+     </div>
+  </div>
+  <!--End of row for user image and its post-->
+  <div class="row">
+  <div class="col-sm-2 "></div>
+
+   <!--***************************************  LIKE LOGO*********************************************************************-->
+
+  <div class="col-sm-2  section-images" ng-init="checkThatFucker(waste.userLike)" >
+
+  <a ng-click="like(waste.content,waste)" ng-show="!isLiked">
+  <img src="{{imageurl1}}"/>&nbsp;&nbsp;<span ng-show="!unlike">like</span>
+  <span ng-show="unlike">unlike</span> </a>&nbsp;&nbsp;<span ng-show="!isLiked">{{waste.like}}</span>
+
+  <a ng-click="like1(waste.content,waste)" ng-show="isLiked">
+  <img src="{{imageurl3}}"/>&nbsp;&nbsp;<span ng-show="!unlike1">like</span>
+  <span ng-show="unlike1">unlike</span> </a>&nbsp;&nbsp;<span ng-show="isLiked">{{waste.like}}</span>
+  </div>
+  <!--***********************************************DISLIKE LOGO***************************************************************-->
+
+  <div class="col-sm-2  section-images" ng-init="checkThatDislikeFucker(waste.userDislike)">
+
+  <a ng-click="dislike(waste.content,waste)" ng-show="!isDisliked">
+  <img src="{{imageurl2}}"/>&nbsp;&nbsp;<span ng-show="!undislike">dislike</span>
+  <span ng-show="undislike">undislike</span></a>&nbsp;&nbsp;<span ng-show="!isDisliked">{{waste.dislike}}</span>
+
+  <a ng-click="dislike1(waste.content,this)" ng-show="isDisliked">
+  <img src="{{imageurl4}}"/>&nbsp;&nbsp;<span ng-show="!undislike1">dislike</span>
+  <span ng-show="undislike1">undislike</span></a>&nbsp;&nbsp;<span ng-show="isDisliked">{{waste.dislike}}</span>
+
+  </div>
+
+  <!--**********************************************COMMENT LOGO******************************************************************-->
+
+
+  <div class="col-sm-2  section-images"><a ng-click="main.getComment(waste.content,waste)"><img src="./public/assets/images/comment.png" />&nbsp;&nbsp;Comments</a>&nbsp;&nbsp;<span>{{waste.comment.length}}</div>
+ </div>
+ <!--End of row for likes and comments-->
+ <!--This is for the commenting part to be displayed-->
+<div class="row" ng-show="waste.content==main.commentSection.content" ng-repeat="commenting in main.commentSection.comment" >
+<div class="col-sm-2"></div>
+<div class="col-sm-6  section-comments"  >
+    <a  ng-click="main.addTheUser(commenting.userId)" ui-sref="userInformation">
+          <img ng-src="{{commenting.postImage}}"/>&nbsp;&nbsp;<span class="section-username">{{commenting.postName}}</span>
+    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>{{commenting.commentText}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <span>{{commenting.date |date:'dd/MM/yyyy HH:mm   '}}</span>
+     <span class="glyphicon glyphicon-remove" ng-show="commenting.userId===main.user._id" ng-click="main.removeComment(commenting.commentText,waste.content,commenting)"></span>
+</div>
+</div>
+<!--End of the row for the comments-->
+
+<div class="row" ng-show="waste.content==main.commentSection.content">
+<div class="col-sm-2"></div>
+<div class="col-sm-6 "><input   ng-model="main.goComment.newComment" type="text" placeholder="Enter the comment.."  ng-keypress="main.setComment($event,waste.content)" class="form-control"></div>
+</div>
+<!--End of row for the input comment-->
+<div class="bottom-border"></div>
+</div>
+<!--End of the container-->
+
+</div><!--End of the margin-->

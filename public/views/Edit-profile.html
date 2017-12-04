@@ -1,0 +1,145 @@
+<!--EDIT PROFILE PAGE-->
+<div class="margin">
+<!-- Loading the controller-->
+<div ng-controller="EditProfileController as profile">
+<!--INITIALIZATION FOR THE PROFILE TO LOAD-->
+<div class="margin" data-ng-init="profile.profileLoad()"></div>
+
+<!--START OF THE CONTAINER-->
+<div class="container ng-cloak">
+
+<!--DISPLAY THE USERNAME-->
+   <div class="row">
+     <div class="col-sm-4 "><span class="pro-username">{{profile.usernameInUppercase}}</span></div>
+    </div><!--End row-->
+
+    <!--DISPLAY THE USER PIC AND TO CHANGE PIC AND EDIT BUTTON-->
+<div class="row">
+     <div class="col-sm-4 "><img class="edit-profile-image" ng-src="{{profile.profileLoader.image}}"/></div>
+     <div class="col-sm-8 ">
+
+   <div class="row">
+        <div class="col-sm-4 "><button type="button" class="btn btn-warning" ngf-select ng-model="profile.file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'">Change Pic</button><br>
+        <span class="alert alert-danger picAlert" ng-if="profile.changePicture">!Click submit to update</span>
+   </div>
+
+   <div class="col-sm-8   edit-button"><button type="button" ng-click="profile.isEditable()" class="btn btn-warning">Edit</button></div>
+</div><!--End of row-->
+
+<!--TO ENTER THE USER NAME-->
+ <div class="row">
+         
+     <div class="col-sm-4  pro-text-align"><span class="pro-title">Username:</span></div>
+     <div class="col-sm-6 pro-text-background"><input type="text" ng-show="profile.isEdit" class="form-control pro-load-data" placeholder="Enter the username" ng-model="profile.profileLoader.username" ><span ng-show="!profile.isEdit" class="pro-load-data">{{profile.profileLoader.username}}</span></div>
+      <span class="pro-alertr" ng-show="profile.error_username">Please enter user name</span>
+</div><!--End of row-->
+
+<!--TO ENTER THE BIRTHDAY-->
+<div class="row">
+   
+   <div class="col-sm-4  pro-text-align"><span class="pro-title">Birthday:</span></div>
+   <div class="col-sm-6 "><input type="text" ng-show="profile.isEdit" ng-model="profile.profileLoader.birthday" class="form-control pro-load-data" placeholder="dd/mm/yyyy"></input><span ng-show="!profile.isEdit" class="pro-load-data">{{profile.profileLoader.birthday}}</span></div>
+   <span class="pro-alert" ng-show="profile.error_birthday">Please enter birthday in dd/mm/yyyy</span>
+</div><!--End row-->
+
+<!--TO ENTER THE SEX-->
+<div class="row"> 
+      
+   <div class="col-sm-4  pro-text-align"><span class="pro-title">Sex:</span></div>
+   <div class="col-sm-6 "><input type="text" ng-show="profile.isEdit" ng-model="profile.profileLoader.sex" class="form-control pro-load-data" placeholder="male/female"></input><span ng-show="!profile.isEdit" class="pro-load-data">{{profile.profileLoader.sex}}</span></div>
+   <span class="pro-alert" ng-show="profile.error_sex">Please enter sex</span>
+</div><!--End row-->
+
+<!-- TO ENTER THE COURSE-->
+<div class="row">
+    
+    <div class="col-sm-4  pro-text-align"><span class="pro-title">Course:</span></div>
+    <div class="col-sm-6 "><input type="text" ng-show="profile.isEdit"  ng-model="profile.profileLoader.course" class="form-control pro-load-data" placeholder="Enter your course "><span ng-show="!profile.isEdit" class="pro-load-data">{{profile.profileLoader.course}}</span></div>
+    <span class="pro-alert" ng-show="profile.error_course">Please enter course</span>
+</div><!--End of row-->
+
+<!--TO ENTER THE YEAR-->
+<div class="row">
+     
+          <div class="col-sm-4  pro-text-align"><span class="pro-title">Present Year:</span></div>
+     <div class="col-sm-6 "><input type="text" ng-show="profile.isEdit" ng-model="profile.profileLoader.year" class="form-control pro-load-data" placeholder="Enter your present year"><span ng-show="!profile.isEdit" class="pro-load-data">{{profile.profileLoader.year}}</span></div>
+     <span class="pro-alert" ng-show="profile.error_year">Please enter year</span>
+ </div><!--End row-->
+
+ <!--TO ENTER THE COLLEGE NAME-->
+ <div class="row">
+      
+      <div class="col-sm-4  pro-text-align"><span class="pro-title">College:</span></div>
+      <div class="col-sm-6 "><input type="text" ng-show="profile.isEdit" ng-model="profile.profileLoader.college" class="form-control pro-load-data" placeholder="Enter your college name" class="pro-load-data"><span ng-show="!profile.isEdit" class="pro-load-data">{{profile.profileLoader.college}}</span></div>
+      <span class="pro-alert" ng-show="profile.error_college">Please enter college</span>
+  </div><!--End row-->
+
+  <!--TO ENTER THE BIOGRAPHY-->
+  <div class="row">
+      
+            <div class="col-sm-4  pro-text-align"><span class="pro-title">Biography:</span></div>
+      <div class="col-sm-6 "><textarea ng-show="profile.isEdit" class="form-control pro-load-data" ng-model="profile.profileLoader.bio" placeholder="Enter your biography."></textarea><span ng-show="!profile.isEdit" class="pro-load-data">{{profile.profileLoader.bio}}</span></div>
+      <span class="profile.pro-alert" ng-show="profile.error_biography">Please enter biography</span>
+  </div><!--End row-->
+
+  <!--TO SUBMIT THE PROFILE BUTTON-->
+  <div class="row">
+     
+     <div class="col-sm-8  pro-button"><button type="button"   ng-click="profile.submitProfileDetail()" class="btn btn-danger">Submit</button></div>
+  </div><!--End row-->
+
+</div><!--End of col-sm-8-->
+</div><!--End of row-->
+</div><!--End of the container-->
+
+<!--TO DISPLAY THE FOLLOWING USER-->
+<div class="container">
+
+<!-- TO DISPLAY THE FOLLOWER TITLE AND ITS COUNT-->
+<div class="row">
+<div class="col-sm-3  ">
+   <div class="row ">
+          <div class="col-sm-12 ">
+           <p class="detail-username">Followers&nbsp;({{profile.followersCount}})</p>
+          </div><!--End of the col-sm-12 -->
+        </div><!--End of the followers row-->
+
+<!-- TO DISPLAY THE IMAGE, TITLE AND USERNAME-->
+ <div class="row " ng-repeat="detail1 in profile.detail.followers">
+           <div class="col-sm-12 ">
+             <a ui-sref="userInformation" ng-click="profile.addTheUser(detail1.userId)">
+                 <img class="detail-user-image" ng-src="{{detail1.followersImage}}">
+                 <span class="detail-user-username">{{detail1.username}}</span>
+             </a>
+           </div><!--End of the followers col-->
+        </div><!--End of the row followers-->
+
+</div><!--End of the first for the followers col div-->
+
+
+<!-- TO DISPLAY THE FOLLOWING TITLE AND COUNT -->
+<div class="col-sm-3 " >
+  <div class="row ">
+           <div class="col-sm-12 ">
+              <p class="detail-username">Following&nbsp;({{profile.followingCount}})</p>
+           </div><!--End of the col-sm-12-->
+          </div><!--End of the following row-->
+
+<!--TO DISPLAY THE  USER DETAIL-->
+  <div class="row ">
+            <div class="col-sm-23 " ng-repeat="detail2 in profile.detail.following">
+              <a ui-sref="userInformation" ng-click="profile.addTheUser(detail2.userId)">
+                 <img class="detail-user-image" ng-src="{{detail2.followingImage}}">
+                 <span class="detail-user-username">{{detail2.username}}</span>
+              </a>
+            </div><!--End of the following col-->
+          </div><!--End of the following-->
+
+</div>
+
+</div><!--end of the row-->
+</div><!--End of the container-->
+
+</div><!--End of the profile controller-->
+
+</div><!--End of the margin-->
